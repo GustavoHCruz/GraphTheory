@@ -7,7 +7,7 @@
 #include<cstdlib>
 #include<algorithm>
 #define NIL -1
-#define inf -2
+#define inf 32767
 enum {WHITE,GRAY,BLACK};
 
 using namespace std;
@@ -19,6 +19,7 @@ struct vertex{
 	int d;
 	int p; //DisjointSet
 	int rank; //DisjointSet
+	int key; //Prim
 	bool visited;
 	vector<int> adj;
 };
@@ -33,9 +34,16 @@ vector<vertex> create(int n){
 		G[i].d = inf;
 		G[i].p = NIL;
 		G[i].rank = inf;
+		G[i].key = inf;
 		G[i].visited = false;
 	}
 	return G;
+}
+
+void add_edge(vertex *v,vector<int> adj){
+	for(int i=0;i<adj.size();i++){
+		v->adj.push_back(adj[i]);
+	}
 }
 
 //======================================================================================= DisjointSet Implementation
@@ -195,7 +203,7 @@ vector<vertex> MST_Kruskal(vector<vertex> &G,vector<vector<short> > &adj){
 		A[i].name = i;
 	}
 	
-	vector<edge_list> edge_list((G.size())*(G.size()+1)/2);
+	vector<edge_list> edge_list((G.size())*(G.size()-1)/2);
 	
 	int k=0;
 	for(short i=0;i<G.size();i++){
