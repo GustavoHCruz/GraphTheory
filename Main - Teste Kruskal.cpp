@@ -1,5 +1,5 @@
 #include"Graph.h"
-#define tam 500 //Grau de precis„o
+#define tam 500 //Grau de precis√£o
 
 int main(){
 	vector<vertex> G;

@@ -17,6 +17,7 @@ struct vertex{
 	int father;
 	int color;
 	int d;
+   int f; //DFS
 	int p; //DisjointSet
 	int rank; //DisjointSet
 	int key; //Prim
@@ -80,7 +81,7 @@ void Union(vector<vertex> &G,int x,int y){
 	y = Find_Set(G,y);
 	Link(G,x,y);
 }
-//=======================================================================================
+//======================================================================================= DisjointSet End
 
 //======================================================================================= BFS Implementation
 void BFS(vector<vertex> &G,int s){ //Breadth First Search
@@ -134,7 +135,40 @@ int diameter(vector<vertex> G){
 
 	return G[b].d;
 }
-//=======================================================================================
+//======================================================================================= BFS End
+
+//======================================================================================= DFS Implementation
+int timer;
+
+void DFS_Visit(vector<vertex> &G,int u){
+   int v;
+
+   G[u].color = GRAY;
+   G[u].d = timer++;
+
+   for(int i=0;i<G[u].adj.size();i++){
+      v = G[u].adj[i];
+      if(G[v].color == WHITE){
+         G[v].father = G[u].name;
+         DFS_Visit(G,v);
+      }
+   }
+   G[u].f = timer++;
+   G[u].color = BLACK;
+}
+
+void DFS(vector<vertex> &G){ //Depth First Search
+   for(int u=0;u<G.size();u++){
+      G[u].color = WHITE;
+      G[u].father = NIL;
+   }
+   timer = 1;
+
+   for(int u=0;u<G.size();u++)
+      if(G[u].color == WHITE)
+         DFS_Visit(G,u);
+}
+//======================================================================================= DFS End
 
 //======================================================================================= Random Tree Random Walk Implementation
 bool check_tree(vector<vertex> &G){
@@ -168,10 +202,10 @@ vector<vertex> RTRW(int n){ //Random Tree Random Walk
 		G[i].visited = false;
 		G[i].name = i;
 	}
-	u = dis(rd); //Randomizando um número
+	u = dis(rd); //Randomizando um nÃºmero
    G[u].visited = true;
 	while(edges < n-1){
-		v = dis(rd); //Randomizando um número
+		v = dis(rd); //Randomizando um nÃºmero
 		if(G[v].visited == false){
 			G[u].adj.push_back(v);
 			G[v].adj.push_back(u);
@@ -182,7 +216,7 @@ vector<vertex> RTRW(int n){ //Random Tree Random Walk
 	}
 	return G;
 }
-//=======================================================================================
+//======================================================================================= Random Tree Random Walk End
 
 //======================================================================================= Random Tree Kruskal Implementation
 struct edge_list{
@@ -243,7 +277,7 @@ vector<vertex> RTK(int n){ //Random Tree Kruskal
 	}
 	return MST_Kruskal(G,adj);
 }
-//=======================================================================================
+//======================================================================================= Random Tree Kruskal End
 
 //======================================================================================= Random Tree Prim Implementation
 struct priority_list{
@@ -313,4 +347,4 @@ vector<vertex> RTP(int n){ //Random Tree Prim
 	
 	return G;
 }
-//=======================================================================================
+//======================================================================================= Random Tree Prim End
