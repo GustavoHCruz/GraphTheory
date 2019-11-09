@@ -7,7 +7,7 @@
 #include<cstdlib>
 #include<algorithm>
 #define NIL -1
-#define inf 32767
+#define inf 2147483647
 enum {WHITE,GRAY,BLACK};
 
 using namespace std;
@@ -47,13 +47,13 @@ void add_edge(vertex *v,vector<int> adj){
 }
 
 //======================================================================================= DisjointSet Implementation
-void Make_Set(vector<vertex> &G,short x){
+void Make_Set(vector<vertex> &G,int x){
 	G[x].p = G[x].name;
 	G[x].rank = 0;
 }
 
-int Find_Set(vector<vertex> &G,short x){
-	short u;
+int Find_Set(vector<vertex> &G,int x){
+	int u;
 	
 	if(G[x].name != G[x].p){
 		u = Find_Set(G,G[x].p);
@@ -62,8 +62,8 @@ int Find_Set(vector<vertex> &G,short x){
 	return G[x].p;
 }
 
-void Link(vector<vertex> &G,short x,short y){
-	short u;
+void Link(vector<vertex> &G,int x,int y){
+	int u;
 	
 	if(G[x].rank > G[y].rank)
 		G[y].p = G[x].name;
@@ -75,7 +75,7 @@ void Link(vector<vertex> &G,short x,short y){
 	}
 }
 
-void Union(vector<vertex> &G,short x,short y){
+void Union(vector<vertex> &G,int x,int y){
 	x = Find_Set(G,x);
 	y = Find_Set(G,y);
 	Link(G,x,y);
@@ -184,18 +184,18 @@ vector<vertex> RTRW(int n){ //Random Tree Random Walk
 }
 //=======================================================================================
 
-//======================================================================================= Random Tree Kruskal
+//======================================================================================= Random Tree Kruskal Implementation
 struct edge_list{
-	short w;
-	short u;
-	short v;
+	int w;
+	int u;
+	int v;
 };
 
 bool sortByW(const edge_list &lhs, const edge_list &rhs){
 	return lhs.w < rhs.w;
 }
 
-vector<vertex> MST_Kruskal(vector<vertex> &G,vector<vector<short> > &adj){
+vector<vertex> MST_Kruskal(vector<vertex> &G,vector<vector<int> > &adj){
 	vector<vertex> A(G.size());
 	
 	for(int i=0;i<G.size();i++){
@@ -206,8 +206,8 @@ vector<vertex> MST_Kruskal(vector<vertex> &G,vector<vector<short> > &adj){
 	vector<edge_list> edge_list((G.size())*(G.size()-1)/2);
 	
 	int k=0;
-	for(short i=0;i<G.size();i++){
-		for(short j=i+1;j<G.size();j++){
+	for(int i=0;i<G.size();i++){
+		for(int j=i+1;j<G.size();j++){
 			edge_list[k].u = i;
 			edge_list[k].v = j;
 			edge_list[k++].w = adj[i][j];
@@ -229,18 +229,88 @@ vector<vertex> MST_Kruskal(vector<vertex> &G,vector<vector<short> > &adj){
 
 vector<vertex> RTK(int n){ //Random Tree Kruskal
 	vector<vertex> G(n);
-	vector<vector<short> > adj(n,vector<short>(n));
+	vector<vector<int> > adj(n,vector<int>(n));
 	random_device rd;
-	uniform_int_distribution<> dis(0,32767);
+	uniform_int_distribution<> dis(0,2147483646);
 	
-	for(short i=0;i<n;i++){
+	for(int i=0;i<n;i++){
 		G[i].name = i;
 		adj[i][i] = inf;
-		for(short j=i+1;j<n;j++){
+		for(int j=i+1;j<n;j++){
 			adj[i][j] = dis(rd);
 			adj[j][i] = adj[i][j];
 		}
 	}
 	return MST_Kruskal(G,adj);
+}
+//=======================================================================================
+
+//======================================================================================= Random Tree Prim Implementation
+struct priority_list{
+	int name;
+	int key;
+};
+
+bool sortByKey(const priority_list &lhs, const priority_list &rhs){
+	return lhs.key < rhs.key;
+}
+
+void MST_Prim(vector<vertex> &G,vector<vector<int> > &adj,int r){
+	short u,v;
+	
+	for(u=0;u<G.size();u++){
+		G[u].key = inf;
+		G[u].father = NIL;
+		G[u].visited = false;
+	}
+	G[r].key = 0;
+	
+	vector<priority_list> Q(G.size());
+
+	for(int i=0;i<G.size();i++){
+		Q[i].name = G[i].name;
+		Q[i].key = G[i].key;
+	}
+	
+	stable_sort(Q.begin(),Q.end(),sortByKey);
+
+	while(Q.size() > 0){
+		u = Q[0].name;
+		Q.erase(Q.begin());
+		G[u].visited = true;
+		for(int i=0;i<G.size();i++){
+			v = i;
+			if(G[v].visited == false && adj[u][v] < G[v].key){
+				G[v].father = u;
+				G[v].key = adj[u][v];
+			}
+		}
+	}
+	for(int i=0;i<G.size();i++){
+		if(G[i].father != NIL){
+			G[i].adj.push_back(G[i].father);
+			G[G[i].father].adj.push_back(i);
+		}
+	}
+}
+
+vector<vertex> RTP(int n){ //Random Tree Prim
+	vector<vertex> G(n);
+	vector<vector<int> > adj(n,vector<int>(n));
+	random_device rd;
+	uniform_int_distribution<> dis(0,2147483646);
+	
+	for(int i=0;i<n;i++){
+		G[i].name = i;
+		adj[i][i] = inf;
+		for(int j=i+1;j<n;j++){
+			adj[i][j] = dis(rd);
+			adj[j][i] = adj[i][j];
+		}
+	}
+
+	MST_Prim(G,adj,(dis(rd)%n));
+	
+	return G;
 }
 //=======================================================================================
