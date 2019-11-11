@@ -3,8 +3,6 @@
 #include<vector>
 #include<queue>
 #include<assert.h>
-#include<ctime>
-#include<cstdlib>
 #include<algorithm>
 #define NIL -1
 #define inf 2147483647
@@ -272,7 +270,6 @@ vector<vertex> RTK(int n){ //Random Tree Kruskal
 		adj[i][i] = inf;
 		for(int j=i+1;j<n;j++){
 			adj[i][j] = dis(rd);
-			adj[j][i] = adj[i][j];
 		}
 	}
 	return MST_Kruskal(G,adj);
@@ -280,13 +277,18 @@ vector<vertex> RTK(int n){ //Random Tree Kruskal
 //======================================================================================= Random Tree Kruskal End
 
 //======================================================================================= Random Tree Prim Implementation
-struct priority_list{
-	int name;
-	int key;
-};
+int extract_min(vector<vertex> &G,vector<int> &Q){
+	int min = G[Q[0]].key,remove_index=0,aux;
 
-bool sortByKey(const priority_list &lhs, const priority_list &rhs){
-	return lhs.key < rhs.key;
+	for(int i=1;i<Q.size();i++){
+		if(G[Q[i]].key < min){
+			min = G[Q[i]].key;
+			remove_index = i;
+		}
+	}
+	aux = G[Q[remove_index]].name;
+	Q.erase(Q.begin()+remove_index);
+	return aux;
 }
 
 void MST_Prim(vector<vertex> &G,vector<vector<int> > &adj,int r){
@@ -299,18 +301,13 @@ void MST_Prim(vector<vertex> &G,vector<vector<int> > &adj,int r){
 	}
 	G[r].key = 0;
 	
-	vector<priority_list> Q(G.size());
+	vector<int> Q;
 
-	for(int i=0;i<G.size();i++){
-		Q[i].name = G[i].name;
-		Q[i].key = G[i].key;
-	}
-	
-	stable_sort(Q.begin(),Q.end(),sortByKey);
+	for(int i=0;i<G.size();i++)
+		Q.push_back(G[i].name);
 
 	while(Q.size() > 0){
-		u = Q[0].name;
-		Q.erase(Q.begin());
+		u = extract_min(G,Q);
 		G[u].visited = true;
 		for(int v=0;v<G.size();v++){
 			if(G[v].visited == false && adj[u][v] < G[v].key){
@@ -319,6 +316,7 @@ void MST_Prim(vector<vertex> &G,vector<vector<int> > &adj,int r){
 			}
 		}
 	}
+
 	for(int i=0;i<G.size();i++){
 		if(G[i].father != NIL){
 			G[i].adj.push_back(G[i].father);
