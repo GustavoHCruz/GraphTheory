@@ -290,8 +290,8 @@ bool sortByKey(const priority_list &lhs, const priority_list &rhs){
 }
 
 void MST_Prim(vector<vertex> &G,vector<vector<int> > &adj,int r){
-	short u,v;
-	
+	int u,v;
+
 	for(u=0;u<G.size();u++){
 		G[u].key = inf;
 		G[u].father = NIL;
@@ -312,8 +312,7 @@ void MST_Prim(vector<vertex> &G,vector<vector<int> > &adj,int r){
 		u = Q[0].name;
 		Q.erase(Q.begin());
 		G[u].visited = true;
-		for(int i=0;i<G.size();i++){
-			v = i;
+		for(int v=0;v<G.size();v++){
 			if(G[v].visited == false && adj[u][v] < G[v].key){
 				G[v].father = u;
 				G[v].key = adj[u][v];
