@@ -21,35 +21,35 @@ int main(){
 
 	BFS(G1,s);
 
-	assert(G1[r].father == s);
+	assert(G1[r].parent == s);
 	assert(G1[r].color == BLACK);
 	assert(G1[r].d == 1);
 
-	assert(G1[s].father == NIL);
+	assert(G1[s].parent == NIL);
 	assert(G1[s].color == BLACK);
 	assert(G1[s].d == 0);
 
-	assert(G1[t].father == x);
+	assert(G1[t].parent == x);
 	assert(G1[t].color == BLACK);
 	assert(G1[t].d == 3);
 
-	assert(G1[u].father == t);
+	assert(G1[u].parent == t);
 	assert(G1[u].color == BLACK);
 	assert(G1[u].d == 4);
 
-	assert(G1[v].father == r);
+	assert(G1[v].parent == r);
 	assert(G1[v].color == BLACK);
 	assert(G1[v].d == 2);
 
-	assert(G1[w].father == s);
+	assert(G1[w].parent == s);
 	assert(G1[w].color == BLACK);
 	assert(G1[w].d == 1);
 
-	assert(G1[x].father == w);
+	assert(G1[x].parent == w);
 	assert(G1[x].color == BLACK);
 	assert(G1[x].d == 2);
 
-	assert(G1[y].father == u);
+	assert(G1[y].parent == u);
 	assert(G1[y].color == BLACK);
 	assert(G1[y].d == 5);
 
@@ -73,27 +73,27 @@ int main(){
 
    BFS(G2,a);
 
-   assert(G2[a].father == NIL);
+   assert(G2[a].parent == NIL);
 	assert(G2[a].color == BLACK);
 	assert(G2[a].d == 0);
 
-	assert(G2[b].father == a);
+	assert(G2[b].parent == a);
 	assert(G2[b].color == BLACK);
 	assert(G2[b].d == 1);
 
-	assert(G2[c].father == a);
+	assert(G2[c].parent == a);
 	assert(G2[c].color == BLACK);
 	assert(G2[c].d == 1);
 
-	assert(G2[d].father == c);
+	assert(G2[d].parent == c);
 	assert(G2[d].color == BLACK);
 	assert(G2[d].d == 2);
 
-	assert(G2[e].father == c);
+	assert(G2[e].parent == c);
 	assert(G2[e].color == BLACK);
 	assert(G2[e].d == 2);
 
-	assert(G2[f].father == e);
+	assert(G2[f].parent == e);
 	assert(G2[f].color == BLACK);
 	assert(G2[f].d == 3);
 

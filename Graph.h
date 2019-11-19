@@ -12,7 +12,7 @@ using namespace std;
 
 struct vertex{
 	int name;
-	int father;
+	int parent;
 	int color;
 	int d;
    int f; //DFS
@@ -28,7 +28,7 @@ vector<vertex> create(int n){
 	
 	for(int i=0;i<n;i++){
 		G[i].name = i;
-		G[i].father = NIL;
+		G[i].parent = NIL;
 		G[i].color = WHITE;
 		G[i].d = inf;
 		G[i].p = NIL;
@@ -87,11 +87,11 @@ void BFS(vector<vertex> &G,int s){ //Breadth First Search
 
 	for(int i=0;i<G.size();i++){
 		G[i].d = inf;
-		G[i].father = NIL;
+		G[i].parent = NIL;
 		G[i].color = WHITE;
 	}
 	G[s].d = 0;
-	G[s].father = NIL;
+	G[s].parent = NIL;
 	G[s].color = GRAY;
 
 	queue<vertex> Q;
@@ -104,7 +104,7 @@ void BFS(vector<vertex> &G,int s){ //Breadth First Search
 			if(G[v].color == WHITE){
 				G[v].d = G[u].d + 1;
 				G[v].color = GRAY;
-				G[v].father = G[u].name;
+				G[v].parent = G[u].name;
 				Q.push(G[v]);
 			}
 		}
@@ -147,7 +147,7 @@ void DFS_Visit(vector<vertex> &G,int u){
    for(int i=0;i<G[u].adj.size();i++){
       v = G[u].adj[i];
       if(G[v].color == WHITE){
-         G[v].father = G[u].name;
+         G[v].parent = G[u].name;
          DFS_Visit(G,v);
       }
    }
@@ -158,7 +158,7 @@ void DFS_Visit(vector<vertex> &G,int u){
 void DFS(vector<vertex> &G){ //Depth First Search
    for(int u=0;u<G.size();u++){
       G[u].color = WHITE;
-      G[u].father = NIL;
+      G[u].parent = NIL;
    }
    timer = 1;
 
@@ -296,7 +296,7 @@ void MST_Prim(vector<vertex> &G,vector<vector<int> > &adj,int r){
 
 	for(u=0;u<G.size();u++){
 		G[u].key = inf;
-		G[u].father = NIL;
+		G[u].parent = NIL;
 		G[u].visited = false;
 	}
 	G[r].key = 0;
@@ -310,17 +310,17 @@ void MST_Prim(vector<vertex> &G,vector<vector<int> > &adj,int r){
 		u = extract_min(G,Q);
 		G[u].visited = true;
 		for(int v=0;v<G.size();v++){
-			if(G[v].visited == false && adj[u][v] < G[v].key){
-				G[v].father = u;
+			if(!G[v].visited && adj[u][v] < G[v].key){
+				G[v].parent = u;
 				G[v].key = adj[u][v];
 			}
 		}
 	}
 
 	for(int i=0;i<G.size();i++){
-		if(G[i].father != NIL){
-			G[i].adj.push_back(G[i].father);
-			G[G[i].father].adj.push_back(i);
+		if(G[i].parent != NIL){
+			G[i].adj.push_back(G[i].parent);
+			G[G[i].parent].adj.push_back(i);
 		}
 	}
 }
