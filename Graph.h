@@ -245,10 +245,10 @@ vector<vertex> RTRW(int n){ //Random Tree Random Walk
 		G[i].visited = false;
 		G[i].name = i;
 	}
-	u = dis(rd); //Randomizando um número
+	u = dis(rd); //Getting Random Number
    G[u].visited = true;
 	while(edges < n-1){
-		v = dis(rd); //Randomizando um número
+		v = dis(rd); //Getting Random Number
 		if(G[v].visited == false){
 			G[u].adj.push_back(v);
 			G[v].adj.push_back(u);
