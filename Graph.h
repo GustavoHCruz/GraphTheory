@@ -168,6 +168,51 @@ void DFS(vector<vertex> &G){ //Depth First Search
 }
 //======================================================================================= DFS End
 
+//======================================================================================= Topological Sort Implementation
+void modified_DFS_Visit(vector<vertex> &G,int u,vector<int> &list){
+   int v;
+
+   G[u].color = GRAY;
+   G[u].d = timer++;
+
+   for(int i=0;i<G[u].adj.size();i++){
+      v = G[u].adj[i];
+      if(G[v].color == WHITE){
+         G[v].parent = G[u].name;
+         modified_DFS_Visit(G,v,list);
+      }
+   }
+   G[u].f = timer++;
+   G[u].color = BLACK;
+   list.push_back(G[u].name);
+}
+
+vector<int> Topological_Sort(vector<vertex> G){
+   vector<int> list;
+
+   for(int u=0;u<G.size();u++){
+      G[u].color = WHITE;
+      G[u].parent = NIL;
+   }
+   timer = 1;
+
+   for(int u=0;u<G.size();u++)
+      if(G[u].color == WHITE)
+         modified_DFS_Visit(G,u,list);
+
+   int i=0,j=list.size()-1,aux;
+   while(i<j){
+      aux = list[i];
+      list[i] = list[j];
+      list[j] = aux;
+      i++;
+      j--;
+   }
+
+   return list;
+}
+//======================================================================================= Topological Sort End
+
 //======================================================================================= Random Tree Random Walk Implementation
 bool check_tree(vector<vertex> &G){
 	random_device rd;
@@ -345,3 +390,34 @@ vector<vertex> RTP(int n){ //Random Tree Prim
 	return G;
 }
 //======================================================================================= Random Tree Prim End
+
+//======================================================================================= Bellman Ford Implementation
+void initializa_single_source(vector<vertex> &G,int s){
+   for(int v=0;v<G.size();v++){
+      G[v].d = inf;
+      G[v].parent = NIL;
+   }
+   G[s].d = 0;
+}
+
+void relax(vector<vertex> &G,int u,int v,int w){
+   if(G[v].d > G[u].d + w){
+      G[v].d = G[u].d + w;
+      G[v].parent = u;
+   }
+}
+
+bool Bellman_Ford(vector<vertex> &G,vector<edge_list> adj,int s){
+   initializa_single_source(G,s);
+
+   for(int i=0;i<G.size()-1;i++)
+      for(int j=0;j<adj.size();j++)
+         relax(G,adj[j].u,adj[j].v,adj[j].w);
+
+   for(int i=0;i<adj.size();i++)
+      if(adj[i].u < adj[i].v + adj[i].w)
+         return false;
+
+   return true;
+}
+//======================================================================================= Bellman Ford End
