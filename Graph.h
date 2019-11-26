@@ -392,7 +392,7 @@ vector<vertex> RTP(int n){ //Random Tree Prim
 //======================================================================================= Random Tree Prim End
 
 //======================================================================================= Bellman Ford Implementation
-void initializa_single_source(vector<vertex> &G,int s){
+void initialize_single_source(vector<vertex> &G,int s){
    for(int v=0;v<G.size();v++){
       G[v].d = inf;
       G[v].parent = NIL;
@@ -408,7 +408,7 @@ void relax(vector<vertex> &G,int u,int v,int w){
 }
 
 bool Bellman_Ford(vector<vertex> &G,vector<edge_list> adj,int s){
-   initializa_single_source(G,s);
+   initialize_single_source(G,s);
 
    for(int i=0;i<G.size()-1;i++)
       for(int j=0;j<adj.size();j++)
@@ -421,3 +421,35 @@ bool Bellman_Ford(vector<vertex> &G,vector<edge_list> adj,int s){
    return true;
 }
 //======================================================================================= Bellman Ford End
+
+//======================================================================================= Dijkstra Implementation
+int extract_min_d(vector<vertex> &G,vector<int> &Q){
+	int min = G[Q[0]].d,remove_index=0,aux;
+
+	for(int i=1;i<Q.size();i++){
+		if(G[Q[i]].d < min){
+			min = G[Q[i]].d;
+			remove_index = i;
+		}
+	}
+	aux = G[Q[remove_index]].name;
+	Q.erase(Q.begin()+remove_index);
+	return aux;
+}
+
+void dijkstra(vector<vertex> &G,int s,vector<vector<int> > adj){
+   int u;
+
+   initialize_single_source(G,s);
+   vector<int> Q;
+   for(int i=0;i<G.size();i++){
+      Q.push_back(G[i].name);
+   }
+
+   while(!Q.empty()){
+      u = extract_min_d(G,Q);
+      for(int v=0;v<G[u].adj.size();v++)
+         relax(G,u,G[u].adj[v],adj[u][G[u].adj[v]]);
+   }
+}
+//======================================================================================= Dijkstra End
