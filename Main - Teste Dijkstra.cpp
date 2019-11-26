@@ -24,7 +24,7 @@ int main(){
    adj[z][x] = 6;
    adj[z][s] = 7;
 
-   dijkstra(G,s,adj);
+   Dijkstra(G,s,adj);
 
    assert(G[s].d == 0);
    assert(G[t].d == 8);

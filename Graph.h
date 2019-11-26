@@ -437,7 +437,7 @@ int extract_min_d(vector<vertex> &G,vector<int> &Q){
 	return aux;
 }
 
-void dijkstra(vector<vertex> &G,int s,vector<vector<int> > adj){
+void Dijkstra(vector<vertex> &G,int s,vector<vector<int> > adj){
    int u;
 
    initialize_single_source(G,s);
@@ -453,3 +453,18 @@ void dijkstra(vector<vertex> &G,int s,vector<vector<int> > adj){
    }
 }
 //======================================================================================= Dijkstra End
+
+//======================================================================================= Floyd Warshall Implementation
+vector<vector<int>> Floyd_Warshall(vector<vector<int>> W){
+   int n = W.size();
+   vector<vector<int>> D = W;
+   vector<int> aux(D.size());
+
+   for(int k=0;k<n;k++)
+      for(int i=0;i<n;i++)
+         for(int j=0;j<n;j++)
+               D[i][j] = min(D[i][j],D[i][k] + D[k][j]);
+
+   return D;
+}
+//======================================================================================= Floyd Warshall End
