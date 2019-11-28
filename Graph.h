@@ -457,9 +457,8 @@ void Dijkstra(vector<vertex> &G,int s,vector<vector<int> > adj){
 //======================================================================================= Floyd Warshall Implementation
 vector<vector<int>> Floyd_Warshall(vector<vector<int>> W){
    int n = W.size();
+	
    vector<vector<int>> D = W;
-   vector<int> aux(D.size());
-
    for(int k=0;k<n;k++)
       for(int i=0;i<n;i++)
          for(int j=0;j<n;j++)
