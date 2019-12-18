@@ -2,6 +2,7 @@
 #include<random>
 #include<vector>
 #include<queue>
+#include<stack>
 #include<assert.h>
 #include<algorithm>
 #define NIL -1
@@ -467,3 +468,41 @@ vector<vector<int>> Floyd_Warshall(vector<vector<int>> W){
    return D;
 }
 //======================================================================================= Floyd Warshall End
+
+//======================================================================================= Hamiltonian Cycle Implementation
+
+//======================================================================================= Hamiltonian Cycle End
+
+//======================================================================================= Eulerian Cycle Implementation
+void remove_edge(vector<vertex> &G,int u,int v){
+	int index;
+	G[u].adj.erase(G[u].adj.begin());
+	for(int i=0;i<G[v].adj.size();i++)
+		if(G[v].adj[i] == u)
+			index = i;
+	G[v].adj.erase(G[v].adj.begin()+index);
+}
+
+vector<int> Hierholzer(vector<vertex> G,int s,vector<vector<bool>> visited){
+	int u,v;
+	stack<int> S;
+	S.push(s);
+	vector<int> C;
+
+	while(!S.empty()){
+		u = S.top();
+		S.pop();
+		C.push_back(u);
+		while(!G[u].adj.empty()){
+			v = G[u].adj.front();
+			remove_edge(G,u,v);
+			if(visited[u][v] == false){
+				S.push(u);
+				visited[u][v] = true;
+				u = v;
+			}
+		}
+	}
+	return C;
+}
+//======================================================================================= Eulerian Cycle End
