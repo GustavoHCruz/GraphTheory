@@ -46,6 +46,19 @@ void add_edge(vertex *v,vector<int> adj){
 	}
 }
 
+void remove_edge(vector<vertex> &G,int u,int v){
+	int index;
+
+	for(int i=0;i<G[u].adj.size();i++)
+		if(G[u].adj[i] == v)
+			index = i;
+	G[u].adj.erase(G[u].adj.begin()+index);
+
+	for(int i=0;i<G[v].adj.size();i++)
+		if(G[v].adj[i] == u)
+			index = i;
+	G[v].adj.erase(G[v].adj.begin()+index);
+}
 //======================================================================================= DisjointSet Implementation
 void Make_Set(vector<vertex> &G,int x){
 	G[x].p = G[x].name;
@@ -470,19 +483,43 @@ vector<vector<int>> Floyd_Warshall(vector<vector<int>> W){
 //======================================================================================= Floyd Warshall End
 
 //======================================================================================= Hamiltonian Cycle Implementation
-//Work In Progress
+void remove_all_occurrences(vector<vector<int>> &W,int x){
+	for(int i=0;i<W.size();i++){
+		W[i][x] = inf;
+	}
+}
+
+int closest(vector<vertex> G,vector<vector<int>> W,int u){
+	int menor=inf,index=NIL;
+	for(int v:G[u].adj)
+		if(menor > W[u][v]){
+			menor = W[u][v];
+			index = v;
+		}
+	return index;
+}
+
+vector<int> TSP_NN(vector<vertex> G,int s,vector<vector<int>> W){ //Traveling Salesman Problem - Nearest Neighbor
+	int u,v;
+	vector<int> C = {s};
+	u = s;
+	
+	while(C.size() != G.size()){
+		v = closest(G,W,u);
+		if(v != NIL){
+			remove_edge(G,u,v);
+			remove_all_occurrences(W,u);
+			C.push_back(v);
+			u = v;
+		}	
+	}
+	C.push_back(s);
+
+	return C;
+}
 //======================================================================================= Hamiltonian Cycle End
 
 //======================================================================================= Eulerian Cycle Implementation
-void remove_edge(vector<vertex> &G,int u,int v){
-	int index;
-	G[u].adj.erase(G[u].adj.begin());
-	for(int i=0;i<G[v].adj.size();i++)
-		if(G[v].adj[i] == u)
-			index = i;
-	G[v].adj.erase(G[v].adj.begin()+index);
-}
-
 vector<int> Hierholzer(vector<vertex> G,int s,vector<vector<bool>> visited){
 	int u,v;
 	stack<int> S;
