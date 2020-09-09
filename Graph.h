@@ -16,7 +16,7 @@ struct vertex{
 	int parent;
 	int color;
 	int d;
-   int f; //DFS
+	int f; //DFS
 	int p; //DisjointSet
 	int rank; //DisjointSet
 	int key; //Prim
